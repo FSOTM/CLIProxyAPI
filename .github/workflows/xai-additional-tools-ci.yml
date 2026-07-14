@@ -1,0 +1,25 @@
+name: xai-additional-tools-ci
+
+on:
+  push:
+    branches:
+      - iodom/ci-xai-additional-tools
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Test XAI executor
+        run: go test ./internal/runtime/executor -count=1
+      - name: Build server
+        run: go build -o /tmp/cli-proxy-api ./cmd/server
